@@ -1,0 +1,117 @@
+# OLR 8A - Git Ignore File
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+ENV/
+env/
+.venv/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Credentials - NEVER commit these!
+gsheet_creds.json
+credentials.json
+*.pem
+*.key
+service_account.json
+
+# Local configuration
+settings.local.json
+.claude/
+
+# Excel files (test data)
+*.xlsx
+*.xls
+!requirements.xlsx
+
+# PDF files
+*.pdf
+compressed_pdfs/
+
+# Cache files
+*.json
+!package.json
+villages_cache.json
+valuation_progress.json
+village_plots_cache.json
+valuation_benchmark_cache.json
+district_ro_combo.json
+village_mappings.json
+task list.json
+
+# Log files
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Installer output
+Output/
+*.exe
+!OLR8A_Setup.exe
+
+# PyInstaller
+*.spec
+
+# Screenshots and images (keep only essential ones)
+*.png
+*.jpg
+*.jpeg
+!icon.png
+!icon.ico
+
+# Backup files
+*_BACKUP.py
+*.backup
+
+# Environment variables
+.env
+.env.local
+
+# Test output
+test_output/
+test_results/
+
+# Compiled files
+*.pyc
+*.pyo
