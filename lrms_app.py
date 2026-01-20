@@ -143,16 +143,26 @@ PIKEPDF_AVAILABLE = None
 
 # ChromeDriver path (set by background thread on startup)
 CHROMEDRIVER_PATH = None
+CHROMEDRIVER_READY = threading.Event()
+CHROMEDRIVER_TIMEOUT = 30  # seconds
 
 def prepare_chromedriver_background():
-    """Prepare ChromeDriver in background thread (optimization)"""
+    """Prepare ChromeDriver in background thread with timeout"""
     global CHROMEDRIVER_PATH
     try:
+        print("⏳ Initializing ChromeDriver (downloading if needed)...")
         CHROMEDRIVER_PATH = ChromeDriverManager().install()
-        print("ChromeDriver ready")
+        print("✓ ChromeDriver ready")
+        CHROMEDRIVER_READY.set()
     except Exception as e:
-        print(f"ChromeDriver check failed: {e}")
+        print(f"⚠ ChromeDriver initialization failed: {e}")
+        print("  Will attempt download when browser starts")
         CHROMEDRIVER_PATH = None
+        CHROMEDRIVER_READY.set()
+
+def wait_for_chromedriver_with_timeout(timeout=CHROMEDRIVER_TIMEOUT):
+    """Wait for ChromeDriver with timeout, return True if ready"""
+    return CHROMEDRIVER_READY.wait(timeout=timeout)
 
 
 def install_ghostscript():
@@ -606,11 +616,24 @@ class LoginAutomation:
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
 
+        # Wait for background ChromeDriver preparation (with timeout)
+        if not CHROMEDRIVER_READY.is_set():
+            self.update_status("  Waiting for ChromeDriver (may take 20-30 seconds on slow internet)...")
+            if not wait_for_chromedriver_with_timeout():
+                self.update_status("  ⚠ ChromeDriver preparation timed out, downloading now...")
+
         # Use pre-prepared ChromeDriver path if available, otherwise get it now
-        if CHROMEDRIVER_PATH:
-            service = Service(CHROMEDRIVER_PATH)
-        else:
-            service = Service(ChromeDriverManager().install())
+        try:
+            if CHROMEDRIVER_PATH:
+                self.update_status("  Using cached ChromeDriver...")
+                service = Service(CHROMEDRIVER_PATH)
+            else:
+                self.update_status("  Downloading ChromeDriver (this may take 30-60 seconds)...")
+                service = Service(ChromeDriverManager().install())
+                self.update_status("  ✓ ChromeDriver downloaded successfully")
+        except Exception as e:
+            self.update_status(f"  ❌ ChromeDriver error: {e}")
+            raise
 
         self.driver = webdriver.Chrome(service=service, options=options)
         self.wait = WebDriverWait(self.driver, WAIT_TIMEOUT)
@@ -4820,17 +4843,28 @@ Considering that the land falls under category 5 of the OLR Act, as per section 
         """Open IGR website in browser for user to select District and RO."""
         try:
             self.log("🌐 Opening IGR website...")
-            
+
+            # Wait for ChromeDriver if it's still initializing
+            if not CHROMEDRIVER_READY.is_set():
+                self.log("  Waiting for ChromeDriver initialization...")
+                wait_for_chromedriver_with_timeout()
+
             # Setup Chrome options
             chrome_options = Options()
             chrome_options.add_experimental_option("detach", True)
             chrome_options.add_argument("--start-maximized")
-            
+
             # Create driver (use pre-prepared path if available)
-            if CHROMEDRIVER_PATH:
-                service = Service(CHROMEDRIVER_PATH)
-            else:
-                service = Service(ChromeDriverManager().install())
+            try:
+                if CHROMEDRIVER_PATH:
+                    self.log("  Using cached ChromeDriver...")
+                    service = Service(CHROMEDRIVER_PATH)
+                else:
+                    self.log("  Downloading ChromeDriver...")
+                    service = Service(ChromeDriverManager().install())
+            except Exception as e:
+                self.log(f"  ❌ ChromeDriver error: {e}")
+                raise
 
             self.igr_driver = webdriver.Chrome(service=service, options=chrome_options)
             
