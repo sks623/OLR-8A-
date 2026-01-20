@@ -1,0 +1,36 @@
+# OLR 8A - LRMS Automation Tool
+# Python Dependencies
+
+# GUI Framework
+customtkinter>=5.2.0
+
+# Browser Automation
+selenium>=4.15.0
+webdriver-manager>=4.0.1
+
+# Excel Processing
+openpyxl>=3.1.2
+pandas>=2.0.0
+
+# Image Processing (for PDF handling)
+Pillow>=10.0.0
+
+# PDF Compression (handled by GhostScript binary)
+# PyPDF2>=3.0.0  # Optional - for pure Python PDF manipulation
+
+# Google Sheets Integration (for telemetry)
+gspread>=5.12.0
+google-auth>=2.23.0
+
+# HTTP Requests (for IP lookup)
+requests>=2.31.0
+
+# System Info
+psutil>=5.9.0
+
+# Date/Time handling (stdlib, included for reference)
+# datetime - built-in
+# os - built-in
+# platform - built-in
+# socket - built-in
+# uuid - built-in
