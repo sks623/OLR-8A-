@@ -1364,6 +1364,13 @@ class LRMSApp(ctk.CTk):
         self.pdf_mapping = {}    # Case No -> PDF path mapping
         self.pdf_dropdowns_fwd = {}   # Widgets for Fwd
         self.pdf_dropdowns_rej = {}   # Widgets for Rej
+
+        # Proclamation PDF storage (Second upload)
+        self.available_pdfs_fwd2 = []  # Proclamation PDFs for Forward cases
+        self.available_pdfs_rej2 = []  # Proclamation PDFs for Reject cases
+        self.pdf_dropdowns_fwd2 = {}   # Proclamation dropdowns for Fwd
+        self.pdf_dropdowns_rej2 = {}   # Proclamation dropdowns for Rej
+
         self.fwd_case_edits = {}  # Store per-case overrides (Q4, Q5, Purpose)
 
         self.create_ui()
@@ -1679,7 +1686,28 @@ class LRMSApp(ctk.CTk):
         ctk.CTkLabel(step2_frame, text="📎 MAPPING (FORWARD):", font=ctk.CTkFont(size=12, weight="bold")).pack(pady=(10, 5), padx=20, anchor="w")
         self.mapping_scroll_frame_fwd = ctk.CTkScrollableFrame(step2_frame, height=180, fg_color=COLORS["bg_card"])
         self.mapping_scroll_frame_fwd.pack(fill="x", padx=20, pady=(0, 15))
-        
+
+        # ===== STEP 2B: PROCLAMATION UPLOAD (FORWARD) =====
+        step2b_frame = ctk.CTkFrame(setup_container, corner_radius=12, fg_color=COLORS["bg_dark"], border_width=1, border_color=COLORS["border_subtle"])
+        step2b_frame.pack(fill="x", pady=10)
+
+        ctk.CTkLabel(step2b_frame, text="📄 STEP 2B: UPLOAD PROCLAMATION (FORWARD CASES)", font=ctk.CTkFont(size=14, weight="bold")).pack(pady=(15, 5))
+        ctk.CTkLabel(step2b_frame, text="Upload and map Proclamation PDFs for Forward cases.", font=ctk.CTkFont(size=11), text_color=COLORS["text_secondary"]).pack(pady=(0, 10))
+
+        pdf_proc_fwd_btn_frame = ctk.CTkFrame(step2b_frame, fg_color="transparent")
+        pdf_proc_fwd_btn_frame.pack(pady=10)
+
+        self.pdf_proclamation_fwd_btn = ctk.CTkButton(pdf_proc_fwd_btn_frame, text="📂 Browse Proclamation PDFs...", width=220, command=self.browse_proclamation_forward)
+        self.pdf_proclamation_fwd_btn.pack(side="left", padx=5)
+
+        self.pdf_count_label_proc_fwd = ctk.CTkLabel(pdf_proc_fwd_btn_frame, text="0 PDFs selected", font=ctk.CTkFont(size=11), text_color=COLORS["accent_green"])
+        self.pdf_count_label_proc_fwd.pack(side="left", padx=10)
+
+        # Mapping Section Proclamation Forward
+        ctk.CTkLabel(step2b_frame, text="📎 MAPPING (PROCLAMATION - FORWARD):", font=ctk.CTkFont(size=12, weight="bold")).pack(pady=(10, 5), padx=20, anchor="w")
+        self.mapping_scroll_frame_proc_fwd = ctk.CTkScrollableFrame(step2b_frame, height=180, fg_color=COLORS["bg_card"])
+        self.mapping_scroll_frame_proc_fwd.pack(fill="x", padx=20, pady=(0, 15))
+
         # ===== STEP 3: PDF UPLOAD (REJECT) =====
         step3_frame = ctk.CTkFrame(setup_container, corner_radius=12, fg_color=COLORS["bg_dark"], border_width=1, border_color=COLORS["border_subtle"])
         step3_frame.pack(fill="x", pady=10)
@@ -1700,7 +1728,28 @@ class LRMSApp(ctk.CTk):
         ctk.CTkLabel(step3_frame, text="📎 MAPPING (REJECT):", font=ctk.CTkFont(size=12, weight="bold")).pack(pady=(10, 5), padx=20, anchor="w")
         self.mapping_scroll_frame_rej = ctk.CTkScrollableFrame(step3_frame, height=180, fg_color=COLORS["bg_card"])
         self.mapping_scroll_frame_rej.pack(fill="x", padx=20, pady=(0, 15))
-        
+
+        # ===== STEP 3B: PROCLAMATION UPLOAD (REJECT) =====
+        step3b_frame = ctk.CTkFrame(setup_container, corner_radius=12, fg_color=COLORS["bg_dark"], border_width=1, border_color=COLORS["border_subtle"])
+        step3b_frame.pack(fill="x", pady=10)
+
+        ctk.CTkLabel(step3b_frame, text="📄 STEP 3B: UPLOAD PROCLAMATION (REJECT CASES)", font=ctk.CTkFont(size=14, weight="bold"), text_color="#ff6b6b").pack(pady=(15, 5))
+        ctk.CTkLabel(step3b_frame, text="Upload and map Proclamation PDFs for Reject cases.", font=ctk.CTkFont(size=11), text_color=COLORS["text_secondary"]).pack(pady=(0, 10))
+
+        pdf_proc_rej_btn_frame = ctk.CTkFrame(step3b_frame, fg_color="transparent")
+        pdf_proc_rej_btn_frame.pack(pady=10)
+
+        self.pdf_proclamation_rej_btn = ctk.CTkButton(pdf_proc_rej_btn_frame, text="📂 Browse Proclamation PDFs...", width=220, fg_color="#ff4444", hover_color="#cc3333", command=self.browse_proclamation_reject)
+        self.pdf_proclamation_rej_btn.pack(side="left", padx=5)
+
+        self.pdf_count_label_proc_rej = ctk.CTkLabel(pdf_proc_rej_btn_frame, text="0 PDFs selected", font=ctk.CTkFont(size=11), text_color="#ff6b6b")
+        self.pdf_count_label_proc_rej.pack(side="left", padx=10)
+
+        # Mapping Section Proclamation Reject
+        ctk.CTkLabel(step3b_frame, text="📎 MAPPING (PROCLAMATION - REJECT):", font=ctk.CTkFont(size=12, weight="bold")).pack(pady=(10, 5), padx=20, anchor="w")
+        self.mapping_scroll_frame_proc_rej = ctk.CTkScrollableFrame(step3b_frame, height=180, fg_color=COLORS["bg_card"])
+        self.mapping_scroll_frame_proc_rej.pack(fill="x", padx=20, pady=(0, 15))
+
         # Available PDFs (Common Log)
         ctk.CTkLabel(setup_container, text="📋 Processed PDFs Log:", font=ctk.CTkFont(size=12, weight="bold")).pack(pady=(15, 5), padx=20, anchor="w")
         self.pdf_list_text = ctk.CTkTextbox(setup_container, height=80, font=ctk.CTkFont(family="Consolas", size=10), fg_color=COLORS["bg_card"])
@@ -2512,6 +2561,119 @@ Considering that the land falls under category 5 of the OLR Act, as per section 
         flat_cases = self.reject_cases if is_rejection else self.forward_cases
         self._generic_batch_processor(cases_to_process, flat_cases, is_rejection, test_mode)
 
+    def _upload_pdf_helper(self, pdf_path, xpath, label, ensure_correct_window, check_js_alert):
+        """Helper method to upload a PDF file using specified xpath.
+
+        Args:
+            pdf_path: Absolute path to PDF file
+            xpath: XPath of the upload element (e.g., '//*[@id="fileUpload"]')
+            label: Label for logging (e.g., "FIRST PDF", "PROCLAMATION")
+            ensure_correct_window: Function to ensure correct window focus
+            check_js_alert: Function to check for JS alerts
+
+        Returns:
+            bool: True if upload successful, False otherwise
+        """
+        # ENSURE ABSOLUTE PATH
+        if pdf_path and not os.path.isabs(pdf_path):
+            self.log_fwd(f"⚠️ {label} path is relative: {pdf_path}")
+            if os.path.exists(pdf_path):
+                pdf_path = os.path.abspath(pdf_path)
+                self.log_fwd(f"✓ Converted to absolute: {pdf_path}")
+            else:
+                script_dir = os.path.dirname(os.path.abspath(__file__))
+                alt_path = os.path.join(script_dir, pdf_path)
+                if os.path.exists(alt_path):
+                    pdf_path = alt_path
+                    self.log_fwd(f"✓ Found in script dir: {pdf_path}")
+                else:
+                    pdf_path = None
+                    self.log_fwd(f"❌ {label} file not found")
+
+        upload_success = False
+        if pdf_path and os.path.exists(pdf_path):
+            file_size_kb = os.path.getsize(pdf_path) / 1024
+            self.log_fwd(f"📎 Uploading {label}: {os.path.basename(pdf_path)} ({file_size_kb:.1f} KB)")
+            self.log_fwd(f"   Full path: {pdf_path}")
+
+            # Upload with retry (max 2 attempts)
+            for attempt in range(2):
+                try:
+                    ensure_correct_window()
+
+                    # Dismiss any existing alerts first
+                    if check_js_alert(0.5):
+                        self.log_fwd("   ⚠️ Dismissed existing alert")
+
+                    # Find upload element using xpath
+                    file_input = WebDriverWait(self.igr_driver, 10).until(
+                        EC.presence_of_element_located((By.XPATH, xpath))
+                    )
+
+                    # Make element visible
+                    self.log_fwd("   📤 Making element visible...")
+                    self.igr_driver.execute_script(
+                        "arguments[0].style.display = 'block';", file_input
+                    )
+                    self.igr_driver.execute_script(
+                        "arguments[0].style.visibility = 'visible';", file_input
+                    )
+                    time.sleep(0.3)
+
+                    # Send absolute path
+                    abs_path = os.path.abspath(pdf_path)
+                    self.log_fwd(f"   📁 Sending path: {abs_path}")
+                    file_input.send_keys(abs_path)
+                    time.sleep(1)
+
+                    # Trigger 'change' event
+                    self.log_fwd("   🔄 Triggering change event...")
+                    self.igr_driver.execute_script(
+                        "arguments[0].dispatchEvent(new Event('change'));", file_input
+                    )
+                    time.sleep(1)
+
+                    # VERIFICATION: Check if filename in element value
+                    uploaded_value = file_input.get_attribute('value')
+                    filename = os.path.basename(pdf_path)
+
+                    if filename in str(uploaded_value):
+                        self.log_fwd(f"   ✅ VERIFIED: '{filename}' in element value")
+                        upload_success = True
+                    elif pdf_path in str(uploaded_value):
+                        self.log_fwd(f"   ✅ VERIFIED: Full path in element value")
+                        upload_success = True
+                    else:
+                        self.log_fwd(f"   ⚠️ WARNING: Filename not in value ('{uploaded_value}')")
+                        upload_success = True  # Proceed anyway
+
+                    # Wait 5 seconds for server processing
+                    self.log_fwd("   ⏳ Waiting 5 seconds for server...")
+                    time.sleep(5)
+
+                    # Check for immediate upload error
+                    err = check_js_alert(1)
+                    if err:
+                        self.log_fwd(f"   ⚠️ Upload Alert: {err}")
+
+                    break  # Success
+
+                except Exception as e:
+                    self.log_fwd(f"   ⚠️ {label} upload attempt {attempt+1} failed: {str(e)[:80]}")
+                    check_js_alert(1)
+                    if attempt < 1:
+                        time.sleep(2)
+
+            if upload_success:
+                self.log_fwd(f"   ✅ {label} upload complete")
+                return True
+            else:
+                self.log_fwd(f"   ❌ {label} upload failed after 2 attempts")
+                return False
+        else:
+            self.log_fwd(f"⚠️ No {label} provided or file missing")
+            return False
+
     def _generic_batch_processor(self, grouped_cases, flat_cases, is_rejection=False, test_mode=False):
         """Shared logic for Forward/Reject batch."""
         success_count = 0
@@ -2786,109 +2948,13 @@ Considering that the land falls under category 5 of the OLR Act, as per section 
                     fail_count += 1
                     continue
 
-                # 5. PDF UPLOAD (with retry)
+                # 5. FIRST PDF UPLOAD (with retry)
                 pdf_path = case.get('pdf_path')
+                self._upload_pdf_helper(pdf_path, '//*[@id="fileUpload"]', "FIRST PDF", ensure_correct_window, check_js_alert)
 
-                # ENSURE ABSOLUTE PATH
-                if pdf_path and not os.path.isabs(pdf_path):
-                    self.log_fwd(f"⚠️ PDF path is relative: {pdf_path}")
-                    if os.path.exists(pdf_path):
-                        pdf_path = os.path.abspath(pdf_path)
-                        self.log_fwd(f"✓ Converted to absolute: {pdf_path}")
-                    else:
-                        script_dir = os.path.dirname(os.path.abspath(__file__))
-                        alt_path = os.path.join(script_dir, pdf_path)
-                        if os.path.exists(alt_path):
-                            pdf_path = alt_path
-                            self.log_fwd(f"✓ Found in script dir: {pdf_path}")
-                        else:
-                            pdf_path = None
-                            self.log_fwd(f"❌ PDF file not found")
-
-                upload_success = False
-                if pdf_path and os.path.exists(pdf_path):
-                    file_size_kb = os.path.getsize(pdf_path) / 1024
-                    self.log_fwd(f"📎 Uploading PDF: {os.path.basename(pdf_path)} ({file_size_kb:.1f} KB)")
-                    self.log_fwd(f"   Full path: {pdf_path}")
-
-                    # Upload with retry (max 2 attempts) - USER'S FIX
-                    for attempt in range(2):
-                        try:
-                            ensure_correct_window()
-
-                            # Dismiss any existing alerts first
-                            if check_js_alert(0.5):
-                                 self.log_fwd("   ⚠️ Dismissed existing alert")
-
-                            # Find upload element
-                            file_input = WebDriverWait(self.igr_driver, 10).until(
-                                EC.presence_of_element_located((By.ID, "fileUpload"))
-                            )
-
-                            # USER'S FIX 1: Make element visible (critical for hidden inputs)
-                            self.log_fwd("   📤 Making element visible...")
-                            self.igr_driver.execute_script(
-                                "arguments[0].style.display = 'block';", file_input
-                            )
-                            self.igr_driver.execute_script(
-                                "arguments[0].style.visibility = 'visible';", file_input
-                            )
-                            time.sleep(0.3)
-
-                            # Send absolute path
-                            abs_path = os.path.abspath(pdf_path)
-                            self.log_fwd(f"   📁 Sending path: {abs_path}")
-                            file_input.send_keys(abs_path)
-                            time.sleep(1)
-
-                            # USER'S FIX 2: Trigger 'change' event (critical - tells page file selected)
-                            self.log_fwd("   🔄 Triggering change event...")
-                            self.igr_driver.execute_script(
-                                "arguments[0].dispatchEvent(new Event('change'));", file_input
-                            )
-                            time.sleep(1)
-
-                            # VERIFICATION: Check if filename in element value
-                            uploaded_value = file_input.get_attribute('value')
-                            filename = os.path.basename(pdf_path)
-
-                            if filename in str(uploaded_value):
-                                self.log_fwd(f"   ✅ VERIFIED: '{filename}' in element value")
-                                upload_success = True
-                            elif pdf_path in str(uploaded_value):
-                                self.log_fwd(f"   ✅ VERIFIED: Full path in element value")
-                                upload_success = True
-                            else:
-                                self.log_fwd(f"   ⚠️ WARNING: Filename not in value ('{uploaded_value}')")
-                                upload_success = True  # Proceed anyway, server will validate
-
-                            # Wait for server processing (increased from 3s to 5s)
-                            self.log_fwd("   ⏳ Waiting 5 seconds for server...")
-                            time.sleep(5)
-                            
-                            # Check for immediate upload error
-                            err = check_js_alert(1)
-                            if err:
-                                self.log_fwd(f"   ⚠️ Uplod Alert: {err}")
-                                
-                            break  # Success
-
-                        except Exception as e:
-                            self.log_fwd(f"   ⚠️ Upload attempt {attempt+1} failed: {str(e)[:80]}")
-                            # Dismiss alert if present
-                            check_js_alert(1)
-                            if attempt < 1:
-                                time.sleep(2)
-                            if attempt < 1:
-                                time.sleep(2)
-
-                    if upload_success:
-                        self.log_fwd("   ✅ Upload complete")
-                    else:
-                        self.log_fwd(f"   ❌ PDF upload failed after {attempt+1} attempts")
-
-                else:
-                    self.log_fwd("⚠️ No PDF provided or file missing")
+                # 5B. PROCLAMATION PDF UPLOAD (with retry)
+                pdf_path2 = case.get('pdf_path2')
+                self._upload_pdf_helper(pdf_path2, '//*[@id="fluProclamationNotice"]', "PROCLAMATION", ensure_correct_window, check_js_alert)
 
                 # 6. FEE FIELDS (with anti-stale protection)
                 if not is_rejection:
@@ -3551,6 +3617,7 @@ Considering that the land falls under category 5 of the OLR Act, as per section 
                     "area": area,
                     "row": row_idx,
                     "pdf_path": pdf_target,
+                    "pdf_path2": None,           # Proclamation PDF path
                     "village_english": village_english,
                     "benchmark": benchmark,      # Now populated from Excel
                     "conversion_fee": conv,      # Now populated from Excel
@@ -3781,7 +3848,47 @@ Considering that the land falls under category 5 of the OLR Act, as per section 
         
         # Update mapping
         self.update_reject_pdf_mapping()
-        
+
+    def browse_proclamation_forward(self):
+        """Browse for Forward Proclamation PDFs."""
+        if not self.forward_cases_grouped:
+            messagebox.showwarning("Warning", "Please detect cases first!")
+            return
+
+        processed, results = self.process_uploaded_pdfs("Select PROCLAMATION PDF files for Forward cases")
+        if processed is None:
+            return
+
+        # Store available Proclamation PDFs
+        self.available_pdfs_fwd2 = processed
+        self.pdf_count_label_proc_fwd.configure(text=f"{len(processed)} PDFs ready")
+
+        # Display list
+        self.update_common_log(results)
+
+        # Update mapping
+        self.update_proclamation_mapping_forward()
+
+    def browse_proclamation_reject(self):
+        """Browse for Reject Proclamation PDFs."""
+        if not self.reject_cases_grouped:
+            messagebox.showwarning("Warning", "Please detect cases first!")
+            return
+
+        processed, results = self.process_uploaded_pdfs("Select PROCLAMATION PDF files for Reject cases")
+        if processed is None:
+            return
+
+        # Store available Proclamation PDFs
+        self.available_pdfs_rej2 = processed
+        self.pdf_count_label_proc_rej.configure(text=f"{len(processed)} PDFs ready")
+
+        # Display list
+        self.update_common_log(results)
+
+        # Update mapping
+        self.update_proclamation_mapping_reject()
+
     def update_common_log(self, compression_results):
         """Update the common PDF log text box."""
         self.pdf_list_text.delete("1.0", "end")
@@ -3950,6 +4057,129 @@ Considering that the land falls under category 5 of the OLR Act, as per section 
             for pdf_path in available_pdfs:
                 if os.path.basename(pdf_path) == value:
                     case["pdf_path"] = pdf_path
+                    if case_no in dropdowns:
+                        dropdowns[case_no]["status"].configure(text="✅")
+                    break
+
+    def update_proclamation_mapping_forward(self):
+        """Create dropdown mappings for each Forward case (Proclamation PDFs)."""
+        # Clear existing dropdowns
+        for widget in self.mapping_scroll_frame_proc_fwd.winfo_children():
+            widget.destroy()
+        self.pdf_dropdowns_fwd2 = {}
+
+        # PDF names for dropdown
+        pdf_names = ["(No PDF selected)"] + [os.path.basename(p) for p in self.available_pdfs_fwd2]
+
+        # Create a row for each Unique Forward case
+        for i, case in enumerate(self.forward_cases_grouped):
+            case_no = case["case_no"]
+            name = case["name"][:25]
+
+            row_frame = ctk.CTkFrame(self.mapping_scroll_frame_proc_fwd, fg_color="transparent")
+            row_frame.pack(fill="x", pady=2)
+
+            # Case info label
+            ctk.CTkLabel(row_frame, text=f"{case_no} - {name}", font=ctk.CTkFont(size=11), width=200, anchor="w").pack(side="left", padx=5)
+            ctk.CTkLabel(row_frame, text="→", font=ctk.CTkFont(size=12)).pack(side="left", padx=5)
+
+            # Dropdown
+            pdf_var = StringVar(value="(No PDF selected)")
+
+            # Try auto-match
+            matched_pdf = self.find_matching_pdf(case_no, self.available_pdfs_fwd2)
+            if matched_pdf:
+                pdf_var.set(os.path.basename(matched_pdf))
+                case["pdf_path2"] = matched_pdf
+            else:
+                case["pdf_path2"] = None
+
+            dropdown = ctk.CTkComboBox(
+                row_frame, values=pdf_names, variable=pdf_var, width=250, font=ctk.CTkFont(size=10),
+                command=lambda val, c=case: self.on_proclamation_change_fwd(val, c)
+            )
+            dropdown.pack(side="left", padx=5)
+
+            # Status
+            status_label = ctk.CTkLabel(row_frame, text="✅" if matched_pdf else "❌", font=ctk.CTkFont(size=12), width=30)
+            status_label.pack(side="left", padx=5)
+
+            self.pdf_dropdowns_fwd2[case_no] = {"dropdown": dropdown, "var": pdf_var, "status": status_label}
+
+        # Log status
+        matched_count = sum(1 for c in self.forward_cases_grouped if c.get("pdf_path2"))
+        total_count = len(self.forward_cases_grouped)
+        self.log(f"📎 Auto-matched {matched_count}/{total_count} Forward Proclamations.")
+
+    def update_proclamation_mapping_reject(self):
+        """Create dropdown mappings for each Reject case (Proclamation PDFs)."""
+        # Clear existing dropdowns
+        for widget in self.mapping_scroll_frame_proc_rej.winfo_children():
+            widget.destroy()
+        self.pdf_dropdowns_rej2 = {}
+
+        # PDF names for dropdown
+        pdf_names = ["(No PDF selected)"] + [os.path.basename(p) for p in self.available_pdfs_rej2]
+
+        # Create a row for each Unique Reject case
+        for i, case in enumerate(self.reject_cases_grouped):
+            case_no = case["case_no"]
+            name = case["name"][:25]
+
+            row_frame = ctk.CTkFrame(self.mapping_scroll_frame_proc_rej, fg_color="transparent")
+            row_frame.pack(fill="x", pady=2)
+
+            # Case info label
+            ctk.CTkLabel(row_frame, text=f"{case_no} - {name}", font=ctk.CTkFont(size=11), width=200, anchor="w").pack(side="left", padx=5)
+            ctk.CTkLabel(row_frame, text="→", font=ctk.CTkFont(size=12)).pack(side="left", padx=5)
+
+            # Dropdown
+            pdf_var = StringVar(value="(No PDF selected)")
+
+            # Try auto-match
+            matched_pdf = self.find_matching_pdf(case_no, self.available_pdfs_rej2)
+            if matched_pdf:
+                pdf_var.set(os.path.basename(matched_pdf))
+                case["pdf_path2"] = matched_pdf
+            else:
+                case["pdf_path2"] = None
+
+            dropdown = ctk.CTkComboBox(
+                row_frame, values=pdf_names, variable=pdf_var, width=250, font=ctk.CTkFont(size=10),
+                command=lambda val, c=case: self.on_proclamation_change_rej(val, c)
+            )
+            dropdown.pack(side="left", padx=5)
+
+            # Status
+            status_label = ctk.CTkLabel(row_frame, text="✅" if matched_pdf else "❌", font=ctk.CTkFont(size=12), width=30)
+            status_label.pack(side="left", padx=5)
+
+            self.pdf_dropdowns_rej2[case_no] = {"dropdown": dropdown, "var": pdf_var, "status": status_label}
+
+        # Log status
+        matched_count = sum(1 for c in self.reject_cases_grouped if c.get("pdf_path2"))
+        total_count = len(self.reject_cases_grouped)
+        self.log(f"📎 Auto-matched {matched_count}/{total_count} Reject Proclamations.")
+
+    def on_proclamation_change_fwd(self, value, case):
+        """Handle Forward Proclamation dropdown change."""
+        self._handle_proclamation_change(value, case, self.available_pdfs_fwd2, self.pdf_dropdowns_fwd2)
+
+    def on_proclamation_change_rej(self, value, case):
+        """Handle Reject Proclamation dropdown change."""
+        self._handle_proclamation_change(value, case, self.available_pdfs_rej2, self.pdf_dropdowns_rej2)
+
+    def _handle_proclamation_change(self, value, case, available_pdfs, dropdowns):
+        """Generic handler for proclamation PDF selection."""
+        case_no = case["case_no"]
+        if value == "(No PDF selected)":
+            case["pdf_path2"] = None
+            if case_no in dropdowns:
+                dropdowns[case_no]["status"].configure(text="❌")
+        else:
+            for pdf_path in available_pdfs:
+                if os.path.basename(pdf_path) == value:
+                    case["pdf_path2"] = pdf_path
                     if case_no in dropdowns:
                         dropdowns[case_no]["status"].configure(text="✅")
                     break
