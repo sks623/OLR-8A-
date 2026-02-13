@@ -92,6 +92,8 @@ Output/
 
 # PyInstaller
 *.spec
+!OLR8A.spec  # Force-include our main spec file
+*.spec.bak
 
 # Screenshots and images (keep only essential ones)
 *.png
