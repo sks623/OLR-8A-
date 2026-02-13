@@ -11,16 +11,24 @@ block_cipher = None
 # Get the directory containing the spec file
 spec_dir = os.path.dirname(os.path.abspath(SPEC))
 
+# Build list of data files (only include if they exist)
+datas_list = [
+    ('telemetry.py', '.'),  # Always include telemetry module
+]
+
+# Optional: Include Google Sheets credentials if present
+gsheet_creds = os.path.join(spec_dir, 'gsheet_creds.json')
+if os.path.exists(gsheet_creds):
+    datas_list.append(('gsheet_creds.json', '.'))
+    print("[BUILD] Including gsheet_creds.json (telemetry enabled)")
+else:
+    print("[BUILD] gsheet_creds.json not found (telemetry will be disabled)")
+
 a = Analysis(
     ['lrms_app.py'],
     pathex=[spec_dir],
     binaries=[],
-    datas=[
-        # Include telemetry module
-        ('telemetry.py', '.'),
-        # Include Google Sheets credentials
-        ('gsheet_creds.json', '.'),
-    ],
+    datas=datas_list,
     hiddenimports=[
         'telemetry',
         'gspread',
