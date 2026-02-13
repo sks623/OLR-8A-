@@ -1,0 +1,135 @@
+OLR-8A/ PROJECT DIRECTORY MAP
+=================================
+
+📦 OLR-8A-/ (Root Directory)
+│
+├── 📄 CORE APPLICATION FILES (4 files)
+│   ├── lrms_app.py ........................ Main application with GUI and automation (262 KB)
+│   ├── telemetry.py ....................... Google Sheets telemetry tracking (6.1 KB)
+│   ├── saccess_login.py ................... SACCESS portal login module (8.9 KB)
+│   └── gs_installer.py .................... GhostScript auto-installer helper (8.5 KB) ✨ NEW
+│
+├── 🎨 RESOURCES (3 files)
+│   ├── icon.ico ........................... Application icon (11 KB)
+│   ├── create_icon.py ..................... Icon generator utility (1.5 KB)
+│   └── 20 questions logic.csv ............. Form automation logic (3.5 KB)
+│
+├── 🔧 BUILD CONFIGURATION (4 files)
+│   ├── requirements.txt ................... Python dependencies list (1.0 KB)
+│   ├── OLR8A.spec ......................... PyInstaller build specification (1.5 KB)
+│   ├── build_complete.bat ................. Automated build script (7.4 KB)
+│   └── installer.iss ...................... Inno Setup installer script (3.9 KB)
+│
+├── 📚 DOCUMENTATION (11 files)
+│   ├── README.md .......................... Project overview and quick start (3.3 KB)
+│   ├── BUILD_GUIDE.md ..................... Complete build guide with directory map (25 KB) ✨ NEW
+│   ├── INSTALLATION_GUIDE.md .............. User installation instructions (15 KB)
+│   ├── BUILD_INSTRUCTIONS.md .............. Developer build instructions (2.6 KB)
+│   ├── USER_MANUAL.md ..................... Detailed user manual (8.0 KB)
+│   ├── QUICK_START.md ..................... 5-minute quick start guide (2.7 KB)
+│   ├── MANUAL_CHROME_FIX.md ............... ChromeDriver troubleshooting (1.2 KB)
+│   ├── BROWSER ERROR.md ................... Browser error handling guide (25 KB)
+│   ├── ALERT_HANDLING.md .................. Alert handling notes (30 bytes)
+│   ├── project details.md ................. Technical documentation (45 KB)
+│   └── DIRECTORY_MAP.txt .................. This file! Visual directory structure ✨ NEW
+│
+├── 🔐 VERSION CONTROL (2 items)
+│   ├── .git/ .............................. Git repository data
+│   └── .gitignore ......................... Git ignore rules (1.2 KB)
+│
+└── 📥 REQUIRED DOWNLOAD (Manual - Not in Git)
+    └── gs10060w64.exe ..................... GhostScript installer (~54 MB)
+                                             📥 Download from: https://ghostscript.com/releases/gsdnld.html
+
+
+📦 BUILD OUTPUTS (Generated during build - NOT in Git)
+=================================
+
+├── 🏗️ build/ ............................... PyInstaller build artifacts (temporary)
+│   ├── OLR8A/ ............................. Build working directory
+│   └── *.pyz, *.toc, etc. ................. Various build files
+│
+├── 📀 dist/ ................................ Distribution folder (final output)
+│   └── OLR8A.exe .......................... Standalone executable (~50 MB) ⭐ MAIN OUTPUT
+│
+└── 📦 Output/ .............................. Inno Setup installer output
+    └── OLR8A_Setup_v1.0.0.exe ............. Windows installer (~70 MB) ⭐ FOR DISTRIBUTION
+
+
+🗑️ REMOVED FILES (Cleaned up)
+=================================
+
+❌ lrms_app - BACKUP.py .................... Old backup (use git history instead)
+❌ build.bat ............................... Old simple build script (use build_complete.bat)
+❌ __pycache__/ ............................ Python bytecode cache (regenerates automatically)
+
+
+📊 FILE STATISTICS
+=================================
+
+Total Files: 22 files
+Total Size: ~400 KB (excluding git)
+
+By Category:
+├── Application Code: 286 KB (4 files)
+├── Documentation: 130 KB (11 files)
+├── Build Config: 14 KB (4 files)
+└── Resources: 16 KB (3 files)
+
+
+🚀 QUICK BUILD COMMANDS
+=================================
+
+# Build everything (automated)
+build_complete.bat
+
+# Build EXE only
+python -m PyInstaller OLR8A.spec --clean --noconfirm
+
+# Build installer only (requires EXE first)
+"C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer.iss
+
+# Test the EXE
+dist\OLR8A.exe
+
+# Clean build artifacts
+rmdir /S /Q build dist Output
+
+
+📋 BUILD PREREQUISITES
+=================================
+
+✅ Python 3.10+ installed
+✅ All dependencies: pip install -r requirements.txt
+✅ PyInstaller: pip install pyinstaller
+✅ Inno Setup (optional): https://jrsoftware.org/isdl.php
+✅ GhostScript installer downloaded: gs10060w64.exe
+
+
+🎯 WHAT GETS BUNDLED IN EXE
+=================================
+
+INCLUDED:
+✅ Python interpreter
+✅ All Python packages (customtkinter, selenium, pandas, openpyxl, etc.)
+✅ Application modules (lrms_app, telemetry, gs_installer, saccess_login)
+✅ Icon (icon.ico)
+✅ Logic CSV (20 questions logic.csv)
+✅ Google Sheets credentials (gsheet_creds.json) - if present
+✅ GhostScript installer (gs10060w64.exe) - if present
+
+NOT INCLUDED (Downloads at runtime):
+❌ ChromeDriver (~20 MB) - auto-downloads via webdriver-manager
+❌ Chrome browser - user must install separately
+
+
+📞 HELP & SUPPORT
+=================================
+
+📖 See BUILD_GUIDE.md for detailed instructions
+🐛 Report issues: https://github.com/sks623/OLR-8A-/issues
+📚 Full documentation in /docs folder (after installation)
+
+
+Last Updated: 2026-02-13
+Project Version: 1.0.0
