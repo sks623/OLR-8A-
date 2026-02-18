@@ -24,6 +24,14 @@ if os.path.exists(gsheet_creds):
 else:
     print("[BUILD] gsheet_creds.json not found (telemetry will be disabled)")
 
+# Optional: Bundle GhostScript installer if present
+gs_installer = os.path.join(spec_dir, 'gs10060w64.exe')
+if os.path.exists(gs_installer):
+    datas_list.append(('gs10060w64.exe', 'resources'))
+    print("[BUILD] Bundling gs10060w64.exe (offline GhostScript installation supported)")
+else:
+    print("[BUILD] gs10060w64.exe not found (GhostScript will auto-install via winget at runtime)")
+
 a = Analysis(
     ['lrms_app.py'],
     pathex=[spec_dir],
