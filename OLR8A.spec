@@ -11,27 +11,72 @@ block_cipher = None
 # Get the directory containing the spec file
 spec_dir = os.path.dirname(os.path.abspath(SPEC))
 
+# Build list of data files (only include if they exist)
+datas_list = [
+    ('telemetry.py', '.'),       # Telemetry module
+    ('saccess_login.py', '.'),   # SACCESS login module
+    ('gs_installer.py', '.'),    # GhostScript installer helper
+    ('20 questions logic.csv', '.'),  # Form logic data
+]
+
+# Optional: Include Google Sheets credentials if present
+gsheet_creds = os.path.join(spec_dir, 'gsheet_creds.json')
+if os.path.exists(gsheet_creds):
+    datas_list.append(('gsheet_creds.json', '.'))
+    print("[BUILD] Including gsheet_creds.json (telemetry enabled)")
+else:
+    print("[BUILD] gsheet_creds.json not found (telemetry will be disabled)")
+
+# Optional: Bundle GhostScript installer if present
+gs_installer = os.path.join(spec_dir, 'gs10060w64.exe')
+if os.path.exists(gs_installer):
+    datas_list.append(('gs10060w64.exe', 'resources'))
+    print("[BUILD] Bundling gs10060w64.exe (offline GhostScript installation supported)")
+else:
+    print("[BUILD] gs10060w64.exe not found (GhostScript will auto-install via winget at runtime)")
+
 a = Analysis(
     ['lrms_app.py'],
     pathex=[spec_dir],
     binaries=[],
-    datas=[
-        # Include telemetry module
-        ('telemetry.py', '.'),
-        # Include Google Sheets credentials
-        ('gsheet_creds.json', '.'),
-    ],
+    datas=datas_list,
     hiddenimports=[
+        # Local modules
         'telemetry',
+        'saccess_login',
+        'gs_installer',
+        # Google Sheets (telemetry)
         'gspread',
         'google.oauth2.service_account',
         'google.auth.transport.requests',
+        'google.auth',
+        # GUI
         'customtkinter',
         'PIL',
+        'PIL.Image',
+        # Data processing
         'openpyxl',
+        'openpyxl.styles',
+        'openpyxl.utils',
         'pandas',
+        # Browser automation
         'selenium',
+        'selenium.webdriver',
+        'selenium.webdriver.chrome',
+        'selenium.webdriver.chrome.service',
+        'selenium.webdriver.chrome.options',
+        'selenium.webdriver.common.by',
+        'selenium.webdriver.support.ui',
+        'selenium.webdriver.support.expected_conditions',
+        'selenium.common.exceptions',
         'webdriver_manager',
+        'webdriver_manager.chrome',
+        # Utilities
+        'requests',
+        'psutil',
+        'tkinter',
+        'tkinter.filedialog',
+        'tkinter.messagebox',
     ],
     hookspath=[],
     hooksconfig={},
